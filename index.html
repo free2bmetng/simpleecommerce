@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <div class="container">
+        <div class="inventory">
+            <div class="item">
+                <h3 id="p1-name">Coffee</h3>
+                <p>$<span id="p1-price">5</span></p>
+                <button class="buy-btn" onclick="addItem('Coffee', 5)">Add to Cart</button>
+            </div>
+
+            <div class="item">
+                <h3 id="p2-name">Tea</h3>
+                <p>$<span id="p2-price">3</span></p>
+                <button class="buy-btn" onclick="addItem('Tea', 3)">Add to Cart</button>
+            </div>
+
+            <div class="item">
+                <h3 id="p3-name">Cake</h3>
+                <p>$<span id="p3-price">12</span></p>
+                <button class="buy-btn" onclick="addItem('Cake', 12)">Add to Cart</button>
+            </div>
+        </div>
+
+        <!-- <div class="cart-panel">
+            <h2>Your Order</h2>
+            <div id="cart-list">
+                </div>
+            <hr>
+            <h3>Total: $<span id="total-amount">0</span></h3>
+        </div>
+    </div> -->
+
+    <div class="cart-panel">
+            <h2>Your Order</h2>
+            <div id="cart-list"></div>
+            <hr>
+            
+            <p>Subtotal: $<span id="subtotal">0</span></p>
+            <p>Discount: -$<span id="discount-amount">0</span></p>
+            <h3>Final Total: $<span id="total-amount">0</span></h3>
+
+            <div class="discount-section">
+                <input type="text" id="promo-input" placeholder="Enter SAVE10">
+                <button class="promo-btn" onclick="applyDiscount()">Apply</button>
+                <p id="promo-message" style="font-size: 12px; color: #ff9f43;"></p>
+            </div>
+        </div>
+
+    <!-- <script>
+        // SECTION: Global Variables
+        // We track the running total and the items in a simple array
+        let currentTotal = 0;
+        let basket = [];
+
+        // SECTION: Add Item Function
+        // This runs whenever a "Buy" button is clicked
+        function addItem(name, price) {
+            // 1. Add the item to our basket array
+            basket.push({ name: name, price: price });
+            
+            // 2. Update the math
+            currentTotal += price;
+            
+            // 3. Update the UI
+            renderCart();
+        }
+
+        // SECTION: Remove Item Function
+        // This identifies the item by its position (index) in the array
+        function removeItem(index) {
+            // Subtract the price of the item we are removing from the total
+            currentTotal -= basket[index].price;
+            
+            // Remove the item from the array
+            basket.splice(index, 1);
+            
+            // Update the UI
+            renderCart();
+        }
+
+        // SECTION: The Render Engine
+        // This function clears the cart display and redraws it based on the basket array
+        function renderCart() {
+            const listElement = document.getElementById('cart-list');
+            const totalElement = document.getElementById('total-amount');
+            
+            // Clear current HTML inside the cart list
+            listElement.innerHTML = "";
+            
+            // Manually build the HTML for every item in the basket
+            basket.forEach((item, index) => {
+                listElement.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.name} ($${item.price})</span>
+                        <button class="remove-btn" onclick="removeItem(${index})">Delete</button>
+                    </div>
+                `;
+            });
+            
+            // Update the total display
+            totalElement.innerText = currentTotal;
+        }
+    </script> -->
+
+    <script>
+        let basket = [];
+        let subtotal = 0;
+        let discountPercent = 0; // Starts at 0%
+
+        // SECTION: Adding items
+        function addItem(name, price) {
+            basket.push({ name: name, price: price });
+            subtotal += price;
+            renderCart();
+        }
+
+        // SECTION: Discount Logic
+        function applyDiscount() {
+            // Grab the text from the hard-coded input field
+            const code = document.getElementById('promo-input').value;
+            const message = document.getElementById('promo-message');
+
+            // Check if the code matches our hard-coded string
+            if (code === "SAVE10") {
+                discountPercent = 0.10; // 10%
+                message.innerText = "10% Discount Applied!";
+            } else {
+                discountPercent = 0;
+                message.innerText = "Invalid Code.";
+            }
+            
+            // Re-render to update the final total math
+            renderCart();
+        }
+
+        // SECTION: The Render Engine
+        function renderCart() {
+            const listElement = document.getElementById('cart-list');
+            listElement.innerHTML = "";
+            
+            // List the items
+            basket.forEach((item, index) => {
+                listElement.innerHTML += `<div>${item.name} ($${item.price})</div>`;
+            });
+
+            // Calculate the discount value
+            // Formula: Subtotal * 0.10
+            let discountValue = subtotal * discountPercent;
+            let finalTotal = subtotal - discountValue;
+
+            // Update the HTML spans
+            document.getElementById('subtotal').innerText = subtotal;
+            document.getElementById('discount-amount').innerText = discountValue.toFixed(2);
+            document.getElementById('total-amount').innerText = finalTotal.toFixed(2);
+        }
+    </script>
+
+
+</body>
+</html>

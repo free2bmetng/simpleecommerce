@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple JS Store</title>
+    <link rel="stylesheet" href="/examplegemini/example.css">
+</head>
+<body>
+    <div id="product-list"></div>
+
+    <div id="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p><strong>Total: $<span id="cart-total">0</span></strong></p>
+        <button onclick="checkout()">Checkout</button>
+    </div>
+
+    <script>
+        // 1. DATA: Our list of products (Simulating a database)
+        const products = [
+            { id: 1, name: "Wireless Mouse", price: 25 },
+            { id: 2, name: "Mechanical Keyboard", price: 75 },
+            { id: 3, name: "Gaming Monitor", price: 200 },
+            { id: 4, name: "USB-C Cable", price: 10 }
+        ];
+
+        // 2. STATE: This array holds the items currently in the cart
+        let cart = [];
+
+        // 3. FUNCTION: Display products on the screen
+        function displayProducts() {
+            const productList = document.getElementById('product-list');
+            
+            products.forEach(product => {
+                // Create a div for each product
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productList.appendChild(card);
+            });
+        }
+
+        // 4. FUNCTION: Logic to add items to the cart array
+        function addToCart(productId) {
+            const item = products.find(p => p.id === productId);
+            cart.push(item);
+            updateCartUI(); // Refresh the display
+        }
+
+// --- NEW SECTION: Remove Function ---
+        // This function takes the index of the item in the cart array
+        function removeFromCart(index) {
+            // .splice(start, deleteCount) removes an item at a specific position
+            cart.splice(index, 1);
+            
+            // Re-render the cart UI to show it's gone
+            updateCartUI();
+        }
+
+        // 5. FUNCTION: Update the HTML to reflect the current cart state
+        function updateCartUI() {
+            const cartList = document.getElementById('cart-items');
+            const totalSpan = document.getElementById('cart-total');
+            
+            // Clear the old list before re-rendering
+            cartList.innerHTML = '';
+            
+            let totalPrice = 0;
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.price}`;
+                cartList.appendChild(li);
+                totalPrice += item.price;
+            });
+
+            totalSpan.textContent = totalPrice;
+        }
+
+        // 6. FUNCTION: Simple alert for checkout
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+            } else {
+                alert(`Thank you for your purchase! Total: $${document.getElementById('cart-total').textContent}`);
+                cart = []; // Reset cart
+                updateCartUI();
+            }
+        }
+
+        
+        // Initialize the store on page load
+        displayProducts();
+    </script>
+</body>
+</html>
